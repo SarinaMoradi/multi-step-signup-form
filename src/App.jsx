@@ -26,12 +26,18 @@ function App() {
     const newErrors = {};
     if (!data.name) newErrors.name = "Name is required";
     if (!data.lastName) newErrors.lastName = "Last Name is required";
+      if (data.email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+  }
 
     setErrors(newErrors);
 
     if (!data.name || !data.lastName) return;
 
-    if (Object.keys(newErrors).length === 0) console.log(step);
+    if (Object.keys(newErrors).length > 0) console.log(step);
     console.log(step);
     setStep((prev) => prev + 1);
   };
@@ -46,11 +52,18 @@ function App() {
       newErrors.password = "Password should be more than 8 characters";
     }
 
+    if (data.phoneNumber) {
+      if (data.phoneNumber.length !== 11) {
+        newErrors.phoneNumber = "Phone number must be exactly 11 digits";
+      }
+    }
+
     if (!data.dateOfBirth) newErrors.dateOfBirth = "Birth date is required";
     setErrors(newErrors);
     if (!data.password || !data.dateOfBirth) return;
 
-    if (Object.keys(newErrors).length === 0) console.log(step);
+    if (Object.keys(newErrors).length > 0) return;
+    
     setStep((prev) => prev + 1);
   };
 
@@ -118,7 +131,7 @@ function StepThree({ children }) {
 
 function Informations({ data }) {
   return (
-    <div className="info" >
+    <div className="info">
       <h4>Name: {data.name}</h4>
       <h4>Last Name: {data.lastName}</h4>
       {data.email && <h4>Email: {data.email}</h4>}
@@ -180,6 +193,19 @@ function Inputs({ data, handleChange, errors }) {
         placeholder="Email (Optional)"
         name="email"
       />
+         {errors.email && (
+        <p
+          style={{
+            margin: "0",
+            color: "red",
+            fontSize: "12px",
+            marginBottom: "0.5rem",
+          }}
+        >
+          {errors.email}
+        </p>
+      )}
+      
     </>
   );
 }
@@ -194,6 +220,18 @@ function InputStepTwo({ data, handleChange, errors }) {
         placeholder="PhoneNumber (Optional)"
         name="phoneNumber"
       />
+           {errors.phoneNumber && (
+        <p
+          style={{
+            margin: "0",
+            color: "red",
+            fontSize: "12px",
+            marginBottom: "0.5rem",
+          }}
+        >
+          {errors.phoneNumber}
+        </p>
+      )}
 
       <input
         value={data.password}
